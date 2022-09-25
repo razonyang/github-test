@@ -1,0 +1,16 @@
+name: Build Latest Image
+on:
+  push:
+  workflow_dispatch:
+  # schedule:
+  #   - cron:  '* * * * *'
+jobs:
+  hugo_release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.stehugo_versionp1.outputs.version }}
+    steps:
+      - id: hugo_version
+        name: Fetch latest Hugo release
+        run: curl https://api.github.com/repos/gohugoio/hugo/releases/latest -s | jq .name -r | awk '{print "version="$1}' >> $GITHUB_OUTPUT
+      - run: echo ${{steps.hugo_version.outputs.version}}
