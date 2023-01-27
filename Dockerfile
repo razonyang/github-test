@@ -1,5 +1,5 @@
-ARG VERSION
-
 FROM alpine
+
+ARG VERSION
 
 CMD echo ${VERSION}
