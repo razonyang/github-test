@@ -2,4 +2,6 @@ FROM alpine
 
 ARG VERSION
 
-CMD echo ${VERSION}
+RUN echo ${VERSION} > version.txt
+
+CMD cat version.txt
