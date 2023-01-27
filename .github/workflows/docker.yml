@@ -40,6 +40,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: razonyang/github-test:latest
+          tags: razonyang/github-test:latest,razonyang/github-test:${{ needs.check.outputs.version }}
           build-args: |
-            VERSION: ${{ needs.jocheckb1.outputs.version }}
+            VERSION: ${{ needs.check.outputs.version }}
