@@ -42,4 +42,4 @@ jobs:
           push: true
           tags: razonyang/github-test:latest,razonyang/github-test:${{ needs.check.outputs.version }}
           build-args: |
-            VERSION: ${{ needs.check.outputs.version }}
+            VERSION=${{ needs.check.outputs.version }}
