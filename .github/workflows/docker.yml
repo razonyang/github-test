@@ -14,14 +14,14 @@ jobs:
       - 
         id: hugo
         name: Fetch latest Hugo release
-        run: curl https://api.github.com/repos/gohugoio/hugo/releases/latest -s | jq .name -r | awk '{print "version="substr($1,2)}' >> $GITHUB_OUTPUT
+        run: curl https://api.github.com/repos/razonyang/github-test/releases/latest -s | jq .name -r | awk '{print "version="substr($1,2)}' >> $GITHUB_OUTPUT
       - 
         id: check
         run: curl https://hub.docker.com/v2/namespaces/razonyang/repositories/hugo/tags/${{steps.hugo.outputs.version}} -s | jq 'has("name")' | awk '{print "exists="$1}' >> $GITHUB_OUTPUT 
   build:
     runs-on: ubuntu-latest
     needs: check
-    if: ${{ needs.jocheckb1.outputs.version }} == 'true'
+    if: ${{ (needs.check.outputs.version != 'ull') && (needs.check.outputs.exists == 'false') }}
     steps:
       -
         name: Set up QEMU
