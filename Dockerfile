@@ -1,0 +1,5 @@
+ARG VERSION
+
+FROM alpine
+
+CMD echo ${VERSION}
