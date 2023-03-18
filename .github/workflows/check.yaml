@@ -48,10 +48,10 @@ jobs:
         if: steps.release.outputs.version != 'ull'
         id: check
         run: |
-          if [ -z ${{ matrix.registry }}];
+          if [[ -z ${{ matrix.registry }} ]];
             then curl https://hub.docker.com/v2/namespaces/razonyang/repositories/hugo/tags/${{ matrix.version }}${{ matrix.prefix }}${{ steps.release.outputs.version }} -s | jq 'has("name")' | awk '{print "exists="$1}' >> $GITHUB_OUTPUT;
             else GHCR_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64) && \
-              curl -s -H  "Authorization: Bearer ${GHCR_TOKEN}" https://ghcr.io/v2/hugomods/hugo/tags/list | jq '.tags | index("${{ matrix.version }}${{ matrix.prefix }}${{ steps.release.outputs.version }}") >= 0'
+              curl -s -H  "Authorization: Bearer ${GHCR_TOKEN}" https://ghcr.io/v2/hugomods/hugo/tags/list | jq '.tags | index("${{ matrix.version }}${{ matrix.prefix }}${{ steps.release.outputs.version }}") >= 0';
           fi;
       
       - run: echo "${{ steps.check.outputs.exists }}"
