@@ -1,0 +1,52 @@
+name: check and build latest image
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  
+jobs:
+  build-and-push-image:
+    strategy:
+      fail-fast: false
+      matrix:
+        registry: ['', 'ghcr.io']
+        version: ['', 'reg-']
+        prefix: ['', 'base-', 'go-', 'node-', 'exts-']
+        include:
+          - version: ''
+            gcc: true
+            extended: true
+          - version: ''
+            prefix: ''
+            dockerfile: docker/default/Dockerfile
+            tags: razonyang/hugo:latest,razonyang/hugo:{0}
+          - version: 'reg-'
+            prefix: ''
+            dockerfile: docker/default/Dockerfile
+            tags: razonyang/hugo:reg,razonyang/hugo:reg-{0}
+          - prefix: base-
+            dockerfile: docker/base/Dockerfile
+            tags: razonyang/hugo:{1}base,razonyang/hugo:{2}base-{0}
+          - prefix: go-
+            dockerfile: docker/go/Dockerfile
+            tags: razonyang/hugo:{1}go,razonyang/hugo:{2}go-{0}
+          - prefix: node-
+            dockerfile: docker/node/Dockerfile
+            tags: razonyang/hugo:{1}node,razonyang/hugo:{2}node-{0}
+          - prefix: exts-
+            dockerfile: docker/exts/Dockerfile
+            tags: razonyang/hugo:{1}exts,razonyang/hugo:{2}exts-{0}
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.issue.number == 3 }}
+    steps:
+      - name: Fetch latest Hugo release
+        id: release
+        run: curl https://api.github.com/repos/gohugoio/hugo/releases/latest -s | jq .tag_name -r | awk '{print "version="substr($1,2)}' >> $GITHUB_OUTPUT
+        
+      - name: Check if the image exists
+        if: steps.release.outputs.version != 'ull'
+        id: check
+        run: curl https://hub.docker.com/v2/namespaces/razonyang/repositories/hugo/tags/${{ matrix.version }}${{ matrix.prefix }}${{ steps.release.outputs.version }} -s | jq 'has("name")' | awk '{print "exists="$1}' >> $GITHUB_OUTPUT 
+      
+      - run: echo "${{ steps.check.exists }}"
