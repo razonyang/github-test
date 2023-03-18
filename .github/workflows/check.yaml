@@ -49,4 +49,4 @@ jobs:
         id: check
         run: curl https://hub.docker.com/v2/namespaces/razonyang/repositories/hugo/tags/${{ matrix.version }}${{ matrix.prefix }}${{ steps.release.outputs.version }} -s | jq 'has("name")' | awk '{print "exists="$1}' >> $GITHUB_OUTPUT 
       
-      - run: echo "${{ steps.check.exists }}"
+      - run: echo "${{ steps.check.outputs.exists }}"
