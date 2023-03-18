@@ -5,11 +5,10 @@ on:
     branches:
       - main
 
+permissions: write-all
   
 jobs:
   build-and-push-image:
-    permissions:
-      packages: write
     strategy:
       fail-fast: false
       matrix:
