@@ -1,0 +1,6 @@
+{{ range resources.Match "bar/**/*" }}
+  {{ warnf "[mod] bar's %v mounted" . }}
+{{ end }}
+{{ range resources.Match "bootstrap/**/*" }}
+  {{ warnf "[mod] bootstrap's %v mounted" . }}
+{{ end }}
