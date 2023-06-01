@@ -1,0 +1,13 @@
+name: Test Hugo images
+
+on:
+ - workflow_dispatch
+
+jobs:
+  docker-run:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-13]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: uname -m
